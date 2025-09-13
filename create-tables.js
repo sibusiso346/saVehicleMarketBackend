@@ -1,6 +1,19 @@
-const pool = require('./database');
+const { Pool } = require('pg');
 
-const initDatabase = async () => {
+const config = {
+  host: 'localhost',
+  port: 5432,
+  database: 'sa_vehicle_db', // Connect to our target database
+  user: 'postgres',
+  password: 'sam346.COM#',
+  ssl: false
+};
+
+async function createTables() {
+  console.log('🔗 Connecting to sa_vehicle_db...');
+  
+  const pool = new Pool(config);
+
   try {
     // Create users table
     await pool.query(`
@@ -17,7 +30,7 @@ const initDatabase = async () => {
       )
     `);
 
-    // Create refresh_tokens table for JWT refresh token functionality
+    // Create refresh_tokens table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
         id SERIAL PRIMARY KEY,
@@ -28,18 +41,21 @@ const initDatabase = async () => {
       )
     `);
 
-    // Create indexes for better performance
+    // Create indexes
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
       CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
       CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
     `);
 
-    console.log('Database tables created successfully');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-    throw error;
-  }
-};
+    console.log('✅ All tables created successfully!');
+    console.log('🎉 Database setup complete!');
 
-module.exports = initDatabase;
+  } catch (error) {
+    console.error('❌ Error creating tables:', error.message);
+  } finally {
+    await pool.end();
+  }
+}
+
+createTables();

@@ -9,7 +9,7 @@ const router = express.Router();
 // Register a new user
 router.post('/register', validate(schemas.register), async (req, res) => {
   try {
-    const { email, password, first_name, last_name, phone } = req.body;
+    const { email, password, first_name, last_name, user_level } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
@@ -26,7 +26,7 @@ router.post('/register', validate(schemas.register), async (req, res) => {
       password,
       first_name,
       last_name,
-      phone
+      user_level
     });
 
     // Generate JWT token
@@ -124,11 +124,11 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.put('/profile', authenticateToken, validate(schemas.updateProfile), async (req, res) => {
   try {
     const updateData = {};
-    const { first_name, last_name, phone } = req.body;
+    const { first_name, last_name, user_level } = req.body;
 
     if (first_name !== undefined) updateData.first_name = first_name;
     if (last_name !== undefined) updateData.last_name = last_name;
-    if (phone !== undefined) updateData.phone = phone;
+    if (user_level !== undefined) updateData.user_level = user_level;
 
     const updatedUser = await User.update(req.user.id, updateData);
     

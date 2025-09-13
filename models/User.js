@@ -7,7 +7,7 @@ class User {
     this.email = data.email;
     this.first_name = data.first_name;
     this.last_name = data.last_name;
-    this.phone = data.phone;
+    this.user_level = data.user_level;
     this.is_active = data.is_active;
     this.created_at = data.created_at;
     this.updated_at = data.updated_at;
@@ -15,19 +15,19 @@ class User {
 
   // Create a new user
   static async create(userData) {
-    const { email, password, first_name, last_name, phone } = userData;
+    const { email, password, first_name, last_name, user_level = 'user' } = userData;
     
     // Hash the password
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     
     const query = `
-      INSERT INTO users (email, password, first_name, last_name, phone)
+      INSERT INTO users (email, password, first_name, last_name, user_level)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, email, first_name, last_name, phone, is_active, created_at, updated_at
+      RETURNING id, email, first_name, last_name, user_level, is_active, created_at, updated_at
     `;
     
-    const values = [email, hashedPassword, first_name, last_name, phone];
+    const values = [email, hashedPassword, first_name, last_name, user_level];
     const result = await pool.query(query, values);
     
     return new User(result.rows[0]);
@@ -94,7 +94,7 @@ class User {
       UPDATE users 
       SET ${fields.join(', ')} 
       WHERE id = $${paramCount}
-      RETURNING id, email, first_name, last_name, phone, is_active, created_at, updated_at
+      RETURNING id, email, first_name, last_name, user_level, is_active, created_at, updated_at
     `;
 
     const result = await pool.query(query, values);
@@ -117,7 +117,7 @@ class User {
   // Get all users (for admin purposes)
   static async findAll(limit = 10, offset = 0) {
     const query = `
-      SELECT id, email, first_name, last_name, phone, is_active, created_at, updated_at
+      SELECT id, email, first_name, last_name, user_level, is_active, created_at, updated_at
       FROM users 
       ORDER BY created_at DESC
       LIMIT $1 OFFSET $2
@@ -134,7 +134,7 @@ class User {
       email: this.email,
       first_name: this.first_name,
       last_name: this.last_name,
-      phone: this.phone,
+      user_level: this.user_level,
       is_active: this.is_active,
       created_at: this.created_at,
       updated_at: this.updated_at

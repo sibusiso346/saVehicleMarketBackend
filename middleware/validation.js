@@ -21,8 +21,8 @@ const schemas = {
       'string.max': 'Last name must not exceed 50 characters',
       'any.required': 'Last name is required'
     }),
-    phone: Joi.string().pattern(/^[\+]?[1-9][\d]{0,15}$/).optional().messages({
-      'string.pattern.base': 'Please provide a valid phone number'
+    user_level: Joi.string().valid('user', 'admin', 'moderator').optional().messages({
+      'any.only': 'User level must be one of: user, admin, moderator'
     })
   }),
 
@@ -45,8 +45,8 @@ const schemas = {
       'string.min': 'Last name must be at least 2 characters long',
       'string.max': 'Last name must not exceed 50 characters'
     }),
-    phone: Joi.string().pattern(/^[\+]?[1-9][\d]{0,15}$/).optional().messages({
-      'string.pattern.base': 'Please provide a valid phone number'
+    user_level: Joi.string().valid('user', 'admin', 'moderator').optional().messages({
+      'any.only': 'User level must be one of: user, admin, moderator'
     })
   }),
 
