@@ -1,10 +1,10 @@
 {
   "watch": [
-    ".",
     "config/",
     "models/",
     "middleware/",
-    "routes/"
+    "routes/",
+    "server.js"
   ],
   "ext": "js,json",
   "ignore": [
@@ -12,11 +12,14 @@
     "*.test.js",
     "*.spec.js",
     "logs/",
-    ".git/"
+    ".git/",
+    "test*.js",
+    "setup*.js",
+    "create*.js"
   ],
   "delay": "1000",
   "env": {
     "NODE_ENV": "development"
   },
-  "verbose": true
+  "verbose": false
 }

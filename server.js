@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const initDatabase = require('./config/initDatabase');
 const authRoutes = require('./routes/auth');
+const vehicleRoutes = require('./routes/vehicles');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,6 +60,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/vehicles', vehicleRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -109,6 +111,7 @@ const startServer = async () => {
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
+      console.log(`🚗 Vehicle endpoints: http://localhost:${PORT}/api/vehicles`);
     });
 
   } catch (error) {
